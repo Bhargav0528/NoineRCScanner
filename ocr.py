@@ -6,14 +6,11 @@ import sys
 import numpy as np
 from cv2 import boundingRect, countNonZero, cvtColor, drawContours, findContours, getStructuringElement, imread, morphologyEx, pyrDown, rectangle, threshold
 
-def imgTest(image):
-
+def imgTest(preimage):
         #rgb = pyrDown(image)
-        
         # apply grayscale
         #preimage = cvtColor(rgb, cv2.COLOR_BGR2GRAY)
-        
-        preimage = cv2.fastNlMeansDenoisingColored(image,None,20,20,7,20)
+        preimage = cv2.fastNlMeansDenoisingColored(preimage,None,20,20,7,20)
         #cv2.imwrite('noise.jpg', preimage)
         preimage = cv2.cvtColor(preimage, cv2.COLOR_BGR2GRAY)
         preimage = cv2.adaptiveThreshold(preimage, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5, 3)
@@ -27,25 +24,59 @@ def imgTest(image):
         #os.remove(filename)
         return text
 
+def firstRead(preimage, width, ratio):
+        height = int(width / ratio)
+        image = cv2.resize(preimage, (width, height))
+
+        preimage = cv2.cvtColor(preimage, cv2.COLOR_BGR2GRAY)
+        preimage = cv2.threshold(preimage, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+        preimage = cv2.medianBlur(preimage, 3)
+
+        filename = "{}.png".format(os.getpid())
+        cv2.imwrite(filename, preimage)
+
+        text = pytesseract.image_to_string(Image.open(filename))
+
+        return text
+
 def main():     
         testImage = cv2.imread(sys.argv[1])
         h, w = testImage.shape[:2]
         ratio = w/h
         
-        
-        print(imgTest(testImage))
-        
 
-        for width in range(1700,2000,25):
+        read_one = firstRead(testImage, 1750, ratio)
+        print(read_one)
+
+
+        bestRead = ""
+        bestAvg = 0
+
+        for width in range(1700,2300,25):
+                lineSum = 0
                 height = int(width / ratio)
                 image = cv2.resize(testImage, (width, height))
-                try:
-                        print("--------------------------------------------------------------------------------------------------")
-                        print("--------------------------------------------------------------------------------------------------")
-                        print(width,'x',height,':',imgTest(image))
+                try:    
+                        tempRead = imgTest(image)
+
+                        temp = tempRead.replace(" ","")
+                        tempList = temp.split("\n")
+
+                        for line in tempList:
+                                lineSum = lineSum + len(line)
+                        
+                        tempAvg = lineSum/len(line)
+
+                        print("----------------------", width)
+                        print(tempRead)
+
+
+                        if(tempAvg>bestAvg):
+                                bestRead = tempRead
+                                bestAvg = tempAvg
+
                 except UnicodeEncodeError:
                         print('UnicodeError')
 
-        cv2.imshow("sd",testImage)
-        cv2.waitKey(0)
+        print(bestRead)
 main()
