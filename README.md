@@ -6,8 +6,8 @@ Vehicle Registration Certificate is a comprehensive document containing 60 field
 
  We aim to solve this problem by automatically extracting the required information from a simple scan of the document. This is done by the use of an app on the officer’s devices that scans the document and uses AI tools to extract the essential details and structure it in a common format in order to create a accurate and detailed database based on a novel data model.
 
-##Requirements
-* [Libraries]
+## Requirements
+* [Libraries](#Libraries)
 * [Installation](#installation)
 * [Using NoineRCScanner](#using-noinercscanner)
 * [Comparision of RC Cards from different states](#comparision)
