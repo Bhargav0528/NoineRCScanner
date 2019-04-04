@@ -143,6 +143,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fetch-blob')
+    compile project(':rn-doc-scanner')
+    compile project(':react-native-camera')
     implementation project(':react-native-camera')
     compileOnly 'com.facebook.react:react-native:+'
     compileOnly 'com.facebook.infer.annotation:infer-annotation:+'
