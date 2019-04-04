@@ -87,26 +87,32 @@ apply from: "../../node_modules/react-native/react.gradle"
  * the correct one based on the CPU architecture of their device.
  */
 def enableSeparateBuildPerCPUArchitecture = false
-
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion safeExtGet('compileSdkVersion', 26)
+    buildToolsVersion safeExtGet('buildToolsVersion', '26.0.2')
 
     defaultConfig {
         applicationId "com.noinercapp"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion safeExtGet('minSdkVersion', 16)
+        targetSdkVersion safeExtGet('targetSdkVersion', 26)
         versionCode 1
         versionName "1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        missingDimensionStrategy 'react-native-camera', 'general'
     }
+
+    
+  
     splits {
         abi {
             reset()
@@ -137,6 +143,17 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fetch-blob')
+    compile project(':rn-doc-scanner')
+    compile project(':react-native-camera')
+    implementation project(':react-native-camera')
+    compileOnly 'com.facebook.react:react-native:+'
+    compileOnly 'com.facebook.infer.annotation:infer-annotation:+'
+    implementation "com.google.zxing:core:3.3.0"
+    implementation "com.drewnoakes:metadata-extractor:2.9.1"
+    implementation "com.android.support:exifinterface:${safeExtGet('supportLibVersion', '27.1.0')}"
+    implementation "com.android.support:support-annotations:${safeExtGet('supportLibVersion', '27.1.0')}"
+    implementation "com.android.support:support-v4:${safeExtGet('supportLibVersion', '27.1.0')}"
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules

@@ -1,40 +1,46 @@
+
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Text, View, Image, StatusBar} from 'react-native';
+import RCScan from './src/components/RCScan';
+import firebase from 'firebase';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+export default class App extends Component{
 
-export default class App extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
+  state = { splash: true };
+
+  componentWillMount(){
+    // Initialize Firebase
+    setTimeout(() => this.setState({ splash: false }), 3000);
+    if (!firebase.apps.length) {
+      const config = {
+        apiKey: "AIzaSyDBa5IOIdomv1I8Fi8LCw9ueSsg2_S_doE",
+        authDomain: "malpr-4c337.firebaseapp.com",
+        databaseURL: "https://malpr-4c337.firebaseio.com",
+        projectId: "malpr-4c337",
+        storageBucket: "malpr-4c337.appspot.com",
+        messagingSenderId: "384049723713"
+      };
+      firebase.initializeApp(config);
+    }
   }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+  render() {
+   if (this.state.splash) {
+     return (
+          <View style={{ flex: 1, backgroundColor: '#272727', justifyContent: 'center', alignItems: 'center' }} >
+            <StatusBar hidden />
+            <View style={{ borderRadius: 100, backgroundColor: 'orange', height: '40%', width: '20%', justifyContent: 'center', alignItems: 'center' }} >
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>RCScanner</Text>
+            </View>
+          </View>
+         //<Image source={require('./src/resources/splash.png')} style={{ flex: 1 }} />
+     );
+   }
+   return (
+     <View style={{flex:1}}>
+       <StatusBar hidden />
+       <RCScan />
+     </View>
+   );
+ }
+}
