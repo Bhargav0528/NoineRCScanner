@@ -33,8 +33,6 @@ ae
 
 """
 
-# print(str)
-#\b(leonardo){e<3}\s+(da)\s+(vinci){e<2}\b
 
 
 def parse_l1(str):
