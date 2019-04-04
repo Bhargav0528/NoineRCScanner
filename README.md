@@ -38,3 +38,20 @@ Python-tesseract is a wrapper for Google’s Tesseract-OCR Engine. It is also us
 ####       pip install pytesseract
 
 
+### Workflow
+
+The user interfaces with the platform through the app NoineRCApp built using React Native
+#### To run the app use Expo client or use Android or IOS emulator
+
+Photos clicked through the app goes to the model running on the Heroku servers containing the model to extract text and parse the text into the JSON format which is returned to the user.
+
+### Files and Folders
+1. NoineRCApp -> React Native App
+2. RCApi -> Contains flask Api and the text extraction and parsing code
+#### RCApi/
+    1. Main.py -> main file to call other modules
+    2. OCR.py -> Text extraction model from images. Opencv for preprocessing images and PyTesseract for OCR
+    3. parseRC.py -> parsing code for the text output of the OCR model. Takes the text, parses it and returns it in JSON format
+    4. requirements.txt -> Requirements needed for the models to work
+
+
