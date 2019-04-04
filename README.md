@@ -27,3 +27,14 @@ Python-tesseract is an optical character recognition (OCR) tool for python. That
 Python-tesseract is a wrapper for Google’s Tesseract-OCR Engine. It is also useful as a stand-alone invocation script to tesseract, as it can read all image types supported by the Python Imaging Library, including jpeg, png, gif, bmp, tiff, and others, whereas tesseract-ocr by default only supports tiff and bmp. Additionally, if used as a script, Python-tesseract will print the recognized text instead of writing it to a file.
 
 #### Github Repo : https://pypi.org/project/pytesseract/
+
+## Installation
+
+### OpenCV2
+####       pip install opencv-python
+
+###pytesseract
+####       sudo apt-get install tesseract-ocr
+####       pip install pytesseract
+
+
