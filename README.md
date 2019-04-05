@@ -28,6 +28,10 @@ Python-tesseract is a wrapper for Google’s Tesseract-OCR Engine. It is also us
 
 #### Github Repo : https://pypi.org/project/pytesseract/
 
+### Heroku
+
+Heroku is a cloud platform as a service (PaaS) supporting several programming languages. Heroku, one of the first cloud platforms, has been in development since June 2007, when it supported only the Ruby programming language, but now supports Java, Node.js, Scala, Clojure, Python, PHP, and Go.
+
 ## Installation
 
 ### OpenCV2

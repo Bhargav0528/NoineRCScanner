@@ -112,8 +112,8 @@ def parse_l2(str, fields):
     data = {}
 
     str_list = str.split('\n')
-    # print(str_list)
-
+    print(str_list)
+    print(str)
     for s in str_list:
         
         s = s.strip()
@@ -131,7 +131,8 @@ def parse_l2(str, fields):
                 data[m[1]] = d2[1]
             else:
                 data[m[0]] = d1[1]
-    # print(keys)
+    
+    print(keys)
     return data
 
 
@@ -165,10 +166,11 @@ def parseToJSON(read1, read2, state):
     read1 = "".join([s for s in read1.strip().splitlines(True) if s.strip()])
     l1 = ['AP', 'TE']
     l2 = ['KA', 'MH', 'DE']
-
-    ex1 = 'AP12T7634D'
-    ex2 = 'KA458999999'
-    regNum = getRegNum(ex2, ex1)
+    print("************")
+    print(state)
+    #ex1 = 'AP12T7634D'
+    #ex2 = 'KA458999999'
+    regNum = getRegNum(read1, read2)
     if(regNum != -1):
         print('\n', regNum)
     else: 
@@ -176,16 +178,19 @@ def parseToJSON(read1, read2, state):
     
 
     if state in l1:
-        data = parse_l1(read1)
+        data = parse_l1(read2)
     elif state in l2:
         if state == 'KA':
-            data = parse_l2(read1, fields_KA)
+            data = parse_l2(read2, fields_KA)
         if state == 'MH':
-            data = parse_l2(read1, fields_MH)
+            data = parse_l2(read2, fields_MH)
         if state == 'DE':
-            data = parse_l2(read1, fields_DE)
+            data = parse_l2(read2, fields_DE)
+    
+    print("------------")
+    print(data)
     return data
         
 
 
-print('\n',parseToJSON(str1, str1, 'KA'))
+#print('\n',parseToJSON(str1, str1, 'KA'))
