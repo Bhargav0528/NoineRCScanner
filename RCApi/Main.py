@@ -8,6 +8,8 @@ from flask_restful import Resource, Api
 from pyimagesearch.transform import four_point_transform
 
 import OCR
+import parseRC
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -18,8 +20,10 @@ class Main(Resource):
 
         url = request.args.get('url')
         token = request.args.get('token')
-        correctorOn = True
+        state = request.args.get('state')
         url = url + '&token=' + token
+
+
 
         url_response = urllib.request.urlopen(url)
         img_array = np.array(bytearray(url_response.read()), dtype=np.uint8)
@@ -30,21 +34,18 @@ class Main(Resource):
         h, w = warped.shape[:2]
         ratio = w/h
         height = int(300 / ratio)
-        imgPlate = cv2.resize(warped, (300, height))
+        #imgPlate = cv2.resize(warped, (300, height))
         #cv2.imshow('lol',imgPlate)
         #cv2.waitKey(0)
 
-        textRead = OCR.readRC(warped)
-        #print(len(validChars))
+        read1, read2 = OCR.readRC(warped)
+        dic = parseRC.parseToJSON(read1, read2, state)
 
-        plateText = OCR.readPlate(validChars,correctorOn)
-        print(plateText)
-        if plateText != 'ignore':
-            return jsonify(plate = plateText)
-        else:
-            return jsonify(plate='Try Again!')
+        print(dic)
 
-api.add_resource(Main, '/plate')
+        return jsonify(dic)
+
+api.add_resource(Main, '/card')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(debug=True)
