@@ -10,7 +10,8 @@ import {
   ToastAndroid,
   Platform,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  Picker
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import RNFetchBlob from 'react-native-fetch-blob';
@@ -32,7 +33,9 @@ export default class RCScan extends Component{
     state = {name: '', contact: '', numPlate: '', clicked: false ,
     imageuri: '', processing: false, plateText: '', flaskurl: '',
     testImage: null, fillDetails: false, Notif: 'Loading...',
-    driveruri:'', licenseuri:'', clickingFor: 'plate'};
+    driveruri:'', licenseuri:'', clickingFor: 'plate', picked: false,
+  subjects: {a:'---',b:'aaa', c:'bbb', d: 'ccc'}, currState: '',
+  states: ['State','KA','MH','AP','DE','TE']};
 
     screenWidth = 0;
     screenHeight = 0;
@@ -54,13 +57,13 @@ export default class RCScan extends Component{
         url = this.cleanUrl(url)
         console.log("URLLLLLLLLLLL",url)
         let response = await fetch(
-          'http://192.168.43.174:5000/plate?url='+url
+          'https://morning-brushlands-82535.herokuapp.com/card?url='+url+"&state="+this.state.currState
           //'http://192.168.1.7:5000/plate?url=https://i.ibb.co/7RLK4PM/test1.jpg'
         );
         console.log("Banthu")
         js = await response.json()
         console.log(js.plate);
-        this.setState({processing:true, plateText:js.plate})
+        this.setState({processing:true, plateText:js.card, subjects: js.card})
       } catch (error) {
         console.error(error);
       }
@@ -174,6 +177,37 @@ export default class RCScan extends Component{
       }
     }
 
+    clickOrPick() {
+      if(this.state.picked)
+      {
+        return (
+          <TouchableOpacity
+            onPress={this.takePicture.bind(this)}
+            style = {{ height: '20%', width: '50%', zIndex: 10 }}
+          >
+              <Image source={require('../resources/shutter_new.png')} style={{ height: '100%', width: '100%' }}/>
+          </TouchableOpacity>
+        )
+      } else {
+        return (
+          <View style={{position: 'absolute', height:"50%", width:"70%" }}>
+            <Picker
+              selectedValue = {this.state.currState}
+              onValueChange= {(itemValue, itemIndex) => {
+                this.setState({currState: itemValue, picked: true})}}
+              mode="dialog"
+              style={{flex:1, zIndex: 15, color: 'white' }}>
+              <Picker.Item label={this.state.states[0]} value={this.state.states[0]} />
+              <Picker.Item label={this.state.states[1]} value={this.state.states[1]} />
+              <Picker.Item label={this.state.states[2]} value={this.state.states[2]} />
+              <Picker.Item label={this.state.states[3]} value={this.state.states[3]} />
+              <Picker.Item label={this.state.states[4]} value={this.state.states[4]} />
+              <Picker.Item label={this.state.states[5]} value={this.state.states[5]} />
+            </Picker>
+          </View>
+        );
+      }
+    }
 
     cameraOrPic(){
       if(!this.state.clicked)
@@ -189,19 +223,14 @@ export default class RCScan extends Component{
           height: '100%', shadowOffset: {width:2, height:2}, shadowOpacity:0.2 }}>
         </View>
 
+        {/* <View style={{ position: 'absolute', right: '-0.5%', borderColor: 'orange',
+           borderWidth: 2, borderBottomLeftRadius: 180, elevation:11, width: '13%',
+           backgroundColor:'#27272780', shadowColor:'#000', borderTopLeftRadius: 180,
+           height: '100%', shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
+         </View> */}
 
-        <View style={{ position: 'absolute', right: '-0.5%', borderColor: 'orange',
-          borderWidth: 2, borderBottomLeftRadius: 180, elevation:11, width: '13%',
-          backgroundColor:'#27272780', shadowColor:'#000', borderTopLeftRadius: 180,
-          height: '100%', shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
-        </View>
         <View style={{ position: 'absolute', left: '84%', height: '100%', width: '20%', justifyContent: 'center', alignItems: 'center' }}>
-        <TouchableOpacity
-          onPress={this.takePicture.bind(this)}
-          style = {{ height: '20%', width: '50%', zIndex: 10 }}
-        >
-            <Image source={require('../resources/shutter_new.png')} style={{ height: '100%', width: '100%' }}/>
-        </TouchableOpacity>
+        {this.clickOrPick()}
         </View>
         <View style={{ backgroundColor: 'black', width: '100%', top: '0%', position: 'absolute'}}/>
         <RNCamera
@@ -235,63 +264,39 @@ export default class RCScan extends Component{
               this.setState({ Notif: 'Success: Plate Read', numPlate: this.state.plateText });
           }
           return (
-            <View style={{height:'100%', backgroundColor:'#EEEEEE'}}>
-            <View style={{position: 'absolute', top: '-0.3%', borderColor: 'orange',
-              borderWidth: 2, borderBottomLeftRadius: 40, borderBottomRightRadius: 40,
-              justifyContent:"center", alignItems:"center", elevation:11,
-              backgroundColor:'#272727', shadowColor:'#000', width: '100%',
-              shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
-              <Text style={{fontSize:21, color:'orange'}}>MALPR</Text>
-            </View>
-            <ScrollView contentContainerStyle={{alignItems:'center', marginTop: 30, backgroundColor:'#EEEEEE'}} style={{flex:1}}>
-            <View style={{flexDirection:'row', justifyContent:'space-between', width:'85%', marginTop:10, marginBottom:15}}>
-            <View  style={{width:this.screenHeight/1.5, height:this.screenWidth/4}}>
-                  {this.takeDriverPic()}
-                </View>
-                <View  style={{width:this.screenHeight/1.5, height:this.screenWidth/4}}>
-                {this.takeLicensePic()}
-                </View>
-                </View>
-                <View style={{alignItems:'center', width:'80%', marginTop:10}}>
-                    <InputForm
-                        onChangeText={name => this.setState({ name: name })}
-                        value={this.state.name}
-                        label="Name"
-                    />
-                </View>
+            <View style={{height:'100%', backgroundColor:'#b4b4b4'}}>
 
-                <View style={{alignItems:'center', width:'80%', marginTop:10}}>
-                    <InputForm
-                        onChangeText={contact => this.setState({ contact: contact })}
-                        value={this.state.contact}
-                        label="Contact"
-                    />
-                </View>
 
-                <View style={{alignItems:'center', width:'80%', marginTop:10}}>
-                    <InputForm
-                        onChangeText={numPlate => this.setState({ numPlate: numPlate })}
-                        value={this.state.numPlate}
-                        label="Plate"
-                    />
-                    <Text style={{alignSelf:'flex-start', fontSize:18, marginTop:10, marginLeft: 115}}>
-                    {this.state.Notif}
-                    </Text>
-                </View>
+              <Text style={{fontSize:30, margin:20, alignSelf:'center'}}>RC Card Details</Text>
+                <ScrollView>
+    	{Object.keys(this.state.subjects).map(mod => {
 
-                <View style={{ justifyContent:'center', marginTop:10, borderRadius:25, width:'100%', alignItems:'center'}}>
-                    <TouchableOpacity
-                    onPress={()=>{this.setState(
-                      { clicked: false, imageuri: '', processing: false, plateText: '', flaskurl: '',
-                        Notif: 'Loading...', fillDetails: false, name: '', contact: '', numPlate: '',
-                        driveruri:'', licenseuri:'', clickingFor: 'plate' }
-                    )}}
-                      style={{alignItems:'center',justifyContent:'center', width:'20%', height:this.screenHeight/9, backgroundColor:'#272727', borderRadius:25}}
-                    >
-                        <Text style={{color:'orange', fontSize:19}}>Submit</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+      	//this.setState({ url: this.state.subjects[noti][mod]['url']})
+      	return(
+      	<View
+      	key={mod}
+          	style={{paddingLeft:5, paddingRight: 5, margin:5}}
+          	>
+          	<View
+            	style={{
+              	flexDirection: 'column',
+              	alignItems: 'center',
+              	borderRadius: 5,
+              	padding: 15,
+              	elevation:2,
+                backgroundColor: 'white'
+
+            	}}>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
+              	<Text style={{ margin: 5, fontSize: 20, fontWeight: 'bold' }}>{mod}:</Text>
+                <Text style={{ margin: 5, fontSize: 20}}>{this.state.subjects[mod]}</Text>
+              </View>
+          	</View>
+        	</View>
+      	)
+    	})}
+    	</ScrollView>
+
             </View>
           );
         }
@@ -308,6 +313,7 @@ export default class RCScan extends Component{
 
 
     takePicture = async function() {
+
           const options = { quality: 0.5, base64: true };
           const data = await this.camera.takePictureAsync(options)
 
