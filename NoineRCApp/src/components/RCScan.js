@@ -35,7 +35,7 @@ export default class RCScan extends Component{
     testImage: null, fillDetails: false, Notif: 'Loading...',
     driveruri:'', licenseuri:'', clickingFor: 'plate', picked: false,
   subjects: {a:'---',b:'aaa', c:'bbb', d: 'ccc'}, currState: '',
-  states: ['State','KA','MH','AP','DE','TE']};
+  states: ['Choose State','KA','MH','AP','DE','TE']};
 
     screenWidth = 0;
     screenHeight = 0;
@@ -181,16 +181,21 @@ export default class RCScan extends Component{
       if(this.state.picked)
       {
         return (
-          <TouchableOpacity
-            onPress={this.takePicture.bind(this)}
-            style = {{ height: '20%', width: '50%', zIndex: 10 }}
-          >
-              <Image source={require('../resources/shutter_new.png')} style={{ height: '100%', width: '100%' }}/>
-          </TouchableOpacity>
+          <View style={{ position: 'absolute', left: '84%', height: '100%', width: '20%',
+                        justifyContent: 'center', alignItems: 'center', zIndex: 15 }}>
+            <TouchableOpacity
+              onPress={this.takePicture.bind(this)}
+              style = {{ height: '20%', width: '50%', zIndex: 10 }}
+            >
+                <Image source={require('../resources/shutter_new.png')} style={{ height: '100%', width: '100%' }}/>
+            </TouchableOpacity>
+          </View>
         )
       } else {
         return (
-          <View style={{position: 'absolute', height:"50%", width:"70%" }}>
+          <View style={{ position: 'absolute', left: '41%', top: '2%', height: '10%', width: '20%', zIndex: 15,
+          borderColor: 'orange', borderWidth: 2, borderRadius: 25, elevation:11, backgroundColor:'#27272780',
+          shadowColor:'#000', shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
             <Picker
               selectedValue = {this.state.currState}
               onValueChange= {(itemValue, itemIndex) => {
@@ -214,7 +219,7 @@ export default class RCScan extends Component{
       {
         return <View style={styles.container}>
 
-<View style={{ position: 'absolute', left: '20%', height: '100%', width: '20%', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ position: 'absolute', left: '20%', height: '100%', width: '20%', justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{color:'white'}}>RNSCAN</Text>
         </View>
         <View style={{position: 'absolute', left: '-0.5%', borderColor: 'orange',
@@ -223,15 +228,14 @@ export default class RCScan extends Component{
           height: '100%', shadowOffset: {width:2, height:2}, shadowOpacity:0.2 }}>
         </View>
 
-        {/* <View style={{ position: 'absolute', right: '-0.5%', borderColor: 'orange',
+        {this.clickOrPick()}
+
+        <View style={{ position: 'absolute', right: '-0.5%', borderColor: 'orange',
            borderWidth: 2, borderBottomLeftRadius: 180, elevation:11, width: '13%',
            backgroundColor:'#27272780', shadowColor:'#000', borderTopLeftRadius: 180,
            height: '100%', shadowOffset: {width:2, height:2}, shadowOpacity:0.2}}>
-         </View> */}
+         </View>
 
-        <View style={{ position: 'absolute', left: '84%', height: '100%', width: '20%', justifyContent: 'center', alignItems: 'center' }}>
-        {this.clickOrPick()}
-        </View>
         <View style={{ backgroundColor: 'black', width: '100%', top: '0%', position: 'absolute'}}/>
         <RNCamera
             ref={ref => {
@@ -264,10 +268,23 @@ export default class RCScan extends Component{
               this.setState({ Notif: 'Success: Plate Read', numPlate: this.state.plateText });
           }
           return (
-            <View style={{height:'100%', backgroundColor:'#b4b4b4'}}>
+            <View style={{height:'100%', backgroundColor:'#EE9129'}}>
 
-
-              <Text style={{fontSize:30, margin:20, alignSelf:'center'}}>RC Card Details</Text>
+              <View style={{ flex: 1, flexDirection: 'row', marginBottom: '3%'}}>
+              <Text style={{fontSize:30, margin:20, alignSelf:'center', fontWeight: 'bold', color: 'white'}}>RC Card Details</Text>
+                <View style={{ justifyContent:'center', marginTop:10, borderRadius:25, width:'100%', alignItems:'center'}}>
+                      <TouchableOpacity
+                      onPress={()=>{this.setState(
+                        { clicked: false, imageuri: '', processing: false, plateText: '', flaskurl: '',
+                          Notif: 'Loading...', fillDetails: false, name: '', contact: '', numPlate: '',
+                          driveruri:'', licenseuri:'', clickingFor: 'plate', picked: false, currState: '' }
+                      )}}
+                        style={{alignItems:'center',justifyContent:'center', width:'20%',
+                        height:this.screenHeight/9, backgroundColor:'#272727', borderRadius:25}}>
+                          <Text style={{color:'#FAC07F', fontSize:19}}>Scan Again!</Text>
+                      </TouchableOpacity>
+                  </View>
+                </View>
                 <ScrollView>
     	{Object.keys(this.state.subjects).map(mod => {
 
@@ -282,14 +299,14 @@ export default class RCScan extends Component{
               	flexDirection: 'column',
               	alignItems: 'center',
               	borderRadius: 5,
-              	padding: 15,
+              	padding: 10,
               	elevation:2,
-                backgroundColor: 'white'
+                backgroundColor: '#FAC07F'
 
             	}}>
               <View style={{ flex: 1, flexDirection: 'row' }}>
               	<Text style={{ margin: 5, fontSize: 20, fontWeight: 'bold' }}>{mod}:</Text>
-                <Text style={{ margin: 5, fontSize: 20}}>{this.state.subjects[mod]}</Text>
+                <Text style={{ margin: 5, fontSize: 20 }}>{this.state.subjects[mod]}</Text>
               </View>
           	</View>
         	</View>
