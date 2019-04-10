@@ -57,12 +57,14 @@ export default class RCScan extends Component{
         url = this.cleanUrl(url)
         console.log("URLLLLLLLLLLL",url)
         let response = await fetch(
-          'https://morning-brushlands-82535.herokuapp.com/card?url='+url+"&state="+this.state.currState
+          //'https://morning-brushlands-82535.herokuapp.com/card?url='+url+"&state="+this.state.currState
+          'https://10.60.2.49/card?url='+url+"&state="+this.state.currState
+
           //'http://192.168.1.7:5000/plate?url=https://i.ibb.co/7RLK4PM/test1.jpg'
         );
         console.log("Banthu")
         js = await response.json()
-        console.log(js.plate);
+        console.log(js.card);
         this.setState({processing:true, plateText:js.card, subjects: js.card})
       } catch (error) {
         console.error(error);
@@ -80,7 +82,7 @@ export default class RCScan extends Component{
           .then(res => {
             console.log(res)
             this.setState({ testImage: res, fillDetails: true }, ()=>{
-              this.uploadDetails.bind(this) })
+              this.uploadDetails() })
           })
           .catch(err => {
             console.log(err)
