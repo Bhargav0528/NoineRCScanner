@@ -1,4 +1,8 @@
-
+## NOINERCSCANNER
+Team:- Bhargav B V - bhargavauden1998@gmail.com
+       Mehul Poddar - mehulpoddar@gmail.com
+       Abhishek Anand - abhishek1aa@live.com
+ 
 **NoineRCScanner** is a Mobile Application which uses Artificial Intelligence algorithms and Image processing to obtain the digital format of the RC Card. It converts all the readable elements in the RC Card of different states and creates an effienct data model to store it in the database. 
 The datastructure is common for all the RC Cards from different states.
 
