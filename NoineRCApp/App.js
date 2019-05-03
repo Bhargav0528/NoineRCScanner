@@ -14,11 +14,12 @@ export default class App extends Component{
     if (!firebase.apps.length) {
       const config = {
         apiKey: "AIzaSyDBa5IOIdomv1I8Fi8LCw9ueSsg2_S_doE",
-        authDomain: "malpr-4c337.firebaseapp.com",
-        databaseURL: "https://malpr-4c337.firebaseio.com",
-        projectId: "malpr-4c337",
-        storageBucket: "malpr-4c337.appspot.com",
-        messagingSenderId: "384049723713"
+    authDomain: "malpr-4c337.firebaseapp.com",
+    databaseURL: "https://malpr-4c337.firebaseio.com",
+    projectId: "malpr-4c337",
+    storageBucket: "malpr-4c337.appspot.com",
+    messagingSenderId: "384049723713"
+
       };
       firebase.initializeApp(config);
     }

@@ -10,10 +10,10 @@ def imgTest(preimage):
         #rgb = pyrDown(image)
         # apply grayscale
         #preimage = cvtColor(rgb, cv2.COLOR_BGR2GRAY)
-        preimage = cv2.fastNlMeansDenoisingColored(preimage,None,20,20,7,20)
+        preimage = cv2.fastNlMeansDenoisingColored(preimage,None,10,10,7,20)
         #cv2.imwrite('noise.jpg', preimage)
         preimage = cv2.cvtColor(preimage, cv2.COLOR_BGR2GRAY)
-        preimage = cv2.adaptiveThreshold(preimage, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5, 3)
+        preimage = cv2.adaptiveThreshold(preimage, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5, 1)
         #preimage = cv2.threshold(preimage, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
         preimage = cv2.medianBlur(preimage, 3)
         
@@ -34,7 +34,6 @@ def firstRead(preimage, width, ratio):
 
         preimage = Image.fromarray(preimage)
         
-        pytesseract.pytesseract.tesseract_cmd = '/app/.apt/usr/bin/tesseract'
         text = pytesseract.image_to_string(preimage)
 
         return text
@@ -66,8 +65,8 @@ def readRC(testImage):
                         
                         tempAvg = lineSum/len(line)
 
-                        #print("----------------------", width)
-                        #print(tempRead)
+                        print("----------------------", width)
+                        print(tempRead)
 
 
                         if(tempAvg>bestAvg):
